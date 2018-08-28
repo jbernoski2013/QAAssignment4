@@ -1,0 +1,101 @@
+/**
+ * Julia Bernoski
+ * Date: April 8th 2018
+ */
+
+function clearDatabase() {
+    var result = confirm("Really want to clear database?");
+    if (result) {
+        try {
+            DB.dropTables();
+            alert("Database cleared.");
+        } catch (e) {
+            alert(e);
+        }
+    }
+}
+
+function addVehicle() {
+    if (addVehicleValidations()) {
+        var sellerName = $("#sellerName").val();
+        var address = $("#address").val();
+        var city = $("#city").val();
+        var phoneNumber = $("#phoneNumber").val();
+        var emailAddress = $("#emailAddress").val();
+        var vehicleYear = $("#vehicleYear").val();
+        var vehicleMake = $("#vehicleMake").val();
+        var vehicleModel = $("#vehicleModel").val();
+
+        console.info("sellerName: " + sellerName + " address: " + address + " city: " + city + " phoneNumber: " + phoneNumber + " emailAddress: " + emailAddress + " vehicleYear: " + vehicleYear + " vehicleMake: " + vehicleMake + " vehicleModel: " + vehicleModel);
+
+        var options = [sellerName, address, city, phoneNumber, emailAddress, vehicleYear, vehicleMake, vehicleModel];
+        function callback() {
+            console.info("Record inserted successfully");
+        }
+        Vehicle.insert(options, callback);
+    }
+    else{
+        console.error("Validation failed");
+    }
+}
+
+
+function displayVehicle(){
+    var options = [];
+    function callback(tx,results){
+        var row=results.rows.item(results.rows.length -1);
+        $("#displayName").html("sellerName: " + row['sellerName']);
+        $("#displayAddress").html("address: " + row['address']);
+        $("#displayCity").html("city: " + row['city']);
+        $("#displayNumber").html("phoneNumber: " + row['address']);
+        $("#displayEmail").html("emailAddress: " + row['emailAddress']);
+        $("#displayYear").html("vehicleYear: " + row['vehicleYear']);
+        $("#displayMake").html("vehicleMake: " + row['vehicleMake']);
+        $("#displayModel").html("vehicleModel: " + row['vehicleModel']);
+        $("#link").html("<a href='http://www.jdpower.com/cars/" + row['vehicleMake']+ "/" + row['vehicleModel'] + "/" + row['vehicleYear'] + "'>Link to JD Power</a>");
+    }
+
+    Vehicle.selectAll(options, callback);
+}
+function showAll() {
+    var options = [];
+    function callback(tx, results) {
+
+        var html = "";
+        for (var i = 0; i < results.rows.length; i++) {
+            var row = results.rows.item(i);
+
+            html += "<li><a data-role='button' data-row-id=" + row['id'] + " href='#'>"
+                + "<h1>sellerName: "+ row['sellerName'] +"</h1>"
+                + "<h2>address: "+ row['address'] +"</h2>"
+                + "<h3>city: "+ row['city'] +"</h3>"
+                + "<h3>phoneNumber: "+ row['phoneNumber'] +"</h3>"
+                + "<h3>emailAddress: "+ row['emailAddress'] +"</h3>"
+                + "<h3>vehicleYear: "+ row['vehicleYear'] +"</h3>"
+                + "<h3>vehicleMake: "+ row['vehicleMake'] +"</h3>"
+                + "<h3>vehicleModel: "+ row['vehicleModel'] +"</h3>"
+                + "<h3>" + "<a href='http://www.jdpower.com/cars/" + row['vehicleMake']+ "/" + row['vehicleModel'] + "/" + row['vehicleYear'] + "'>Link to JD Power</a>" +"</h3>"
+                + "</a></li>";
+        }
+        var lv = $("#lvAll");
+        lv = lv.html(html);
+        //very important
+        lv.listview("refresh");
+
+        $("#lvAll a").on("click", clickHandler);
+        function clickHandler() {
+            localStorage.setItem("id", $(this).attr("data-row-id"));
+            //navigate to detail page
+            // both will work
+            $.mobile.changePage("#pageDetail", {transition: 'none'});
+            // $(location).prop('href', '#pageDetail');
+        }
+
+
+    }
+    Vehicle.selectAll(options, callback);
+}
+
+
+
+
