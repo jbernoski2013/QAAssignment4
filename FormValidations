@@ -1,0 +1,110 @@
+/**
+ * Julia Bernoski
+ * Date: April 8th 2018
+ */
+
+function addVehicleValidations(){
+    var form = $("#addVehicle");
+    form.validate({
+        rules:{
+            sellerName:{
+                required:true
+            },
+            address:{
+                required:true
+            },
+            city:{
+                required:true
+            },
+            phoneNumber:{
+                required:true,
+                phoneCheck:true
+            },
+            emailAddress:{
+                required:true,
+               emailCheck: true
+            },
+            vehicleYear:{
+                required: true,
+                vehicleYearCheck: true
+            },
+            vehicleMake:{
+                required:true
+            },
+            vehicleModel:{
+                required: true
+            }
+
+        },
+        messages:{
+            sellerName:{
+                required:"Seller Name is required."
+            },
+            address:{
+                required:"Address is required."
+            },
+            city:{
+                required:"City is required."
+            },
+            phoneNumber:{
+                required:"Phone Number is required.",
+                phoneCheck:"Phone Number must be valid."
+            },
+            emailAddress:{
+                required:"Email Address is required.",
+                emailCheck: "Email Address must be valid."
+            },
+            vehicleYear:{
+                required: "Vehicle Year is required.",
+                vehicleYearCheck: "Please Enter a valid year."
+            },
+            vehicleMake:{
+                required:"Vehicle Make is required."
+               //vehicleMakeCheck:"Vehicle Make must be valid."
+            },
+            vehicleModel:{
+                required: "Vehicle Model is required."
+                //vehicleModelCheck:"Vehicle model must be valid."
+            }
+        }
+    });
+    return form.valid();
+}
+
+/*function displayVehicle(){
+    var sellerName = $("#sellerName").val();
+    var address = $("#address").val();
+    var city = $("#city").val();
+    var phoneNumber = $("#phoneNumber").val();
+    var emailAddress = $("#emailAddress").val();
+    var vehicle = $("#vehicle").val();
+
+    var vehicleInfo = "sellerName: " + sellerName + "address: " + address + "city: " + city + "phoneNumber: " + phoneNumber + "emailAddress: " + emailAddress + "vehicle: " + vehicle;
+
+    $("#newVehicle").val(vehicleInfo);
+}*/
+
+//email validation
+jQuery.validator.addMethod("emailCheck",
+    function(value, element){
+        var regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+        return this.optional(element) || regex.test(value);
+    },
+    "Please enter a valid Phone number");
+
+jQuery.validator.addMethod("phoneCheck",
+    function(value, element){
+        var regex = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
+        return this.optional(element) || regex.test(value);
+    },
+    "Please enter a valid Phone number");
+
+//Vehicle Year Validation
+jQuery.validator.addMethod("vehicleYearCheck",
+    function(value, element){
+        var regex = /^\d{4}$/;
+        return this.optional(element) || regex.test(value);
+    },
+    "Please enter a valid Vehicle Year");
+
+
