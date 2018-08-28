@@ -1,0 +1,36 @@
+/**
+ * Julia Bernoski
+ * Date: April 8th 2018
+ */
+function check(){
+    addVehicle();
+    displayVehicle();
+}
+
+function listOfVehicles(){
+    showAll();
+}
+
+
+function init() {
+    $("#saveVehicle").on("click", check);
+    $("#showVehiclePage").on("pageshow",listOfVehicles);
+}
+
+function initDB(){
+    console.info("Creating database ...");
+    try {
+        DB.createDatabase();
+        if (db) {
+            console.info("Creating tables ... ");
+            DB.createTables();
+        }
+    } catch (e) {
+        console.error("Error: (Fatal) Error in initDB(). Can not proceed.");
+    }
+}
+
+$(document).ready(function () {
+    init();
+    initDB();
+});
