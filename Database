@@ -1,0 +1,80 @@
+/**
+ * Julia Bernoski
+ * Date: April 8th 2018
+ */
+var db;
+
+
+
+/**
+ * General purpose error handler callback
+ * @param tx The transaction object
+ * @param error The error object
+ */
+function errorHandler(tx, error){
+    console.error("SQL error: " + tx + " (" + error.code + ") : " + error.message);
+}
+
+var DB =  {
+
+    createDatabase: function(){
+        var shortName = "VehicleDB";
+        var version = "1.0";
+        var displayName = "DB for vehicle app";
+        var dbSize = 2 * 1024 * 1024;
+
+        function dbCreateSuccess() {
+            console.info("Success: Database creation successful.");
+
+        }
+
+        db = openDatabase(shortName, version, displayName, dbSize, dbCreateSuccess);
+    },
+    createTables: function () {
+
+        function txFunction(tx) {
+            var sql = "CREATE TABLE IF NOT EXISTS vehicles(" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "sellerName VARCHAR(20) NOT NULL, "+
+                "address VARCHAR(20) NOT NULL, " +
+                "city VARCHAR(20) NOT NULL, " +
+                "phoneNumber INTEGER NOT NULL," +
+                "emailAddress VARCHAR(60) NOT NULL," +
+                "vehicleYear VARCHAR(4) NOT NULL, " +
+                "vehicleMake VARCHAR(10) NOT NULL, " +
+                "vehicleModel VARCHAR(10) NOT NULL);";
+
+            var options = [];
+
+            function successCreate() {
+                console.info("Success: Table creation successful");
+            }
+
+
+            tx.executeSql(sql, options, successCreate, errorHandler);
+        }
+        function successTransaction() {
+            console.info("Success: Create table transaction successful");
+        }
+        db.transaction(txFunction, errorHandler, successTransaction);
+    },
+    dropTables: function () {
+        function txFunction(tx) {
+            var sql = "DROP TABLE IF EXISTS vehicle;";
+            var options = [];
+            function successDrop() {
+                console.info("Success: Dropping Table successful.");
+            }
+            tx.executeSql(sql, options, successDrop, errorHandler);
+        }
+
+        function successTransaction() {
+            console.info("Success: Table drop transaction successful");
+
+
+        }
+        db.transaction(txFunction, errorHandler, successTransaction);
+
+    }
+
+};
